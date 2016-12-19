@@ -1,0 +1,24 @@
+{
+  "name": "async-in-js-samples",
+  "version": "1.0.0",
+  "description": "\"#async-in-js-samples\"",
+  "main": "promise.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kogoia/async-in-js-samples.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kogoia/async-in-js-samples/issues"
+  },
+  "homepage": "https://github.com/kogoia/async-in-js-samples#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
+}
