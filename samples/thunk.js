@@ -26,3 +26,19 @@ thunkAsync((sum) => {
     output(sum);  
 });
 
+//////////////////////////////
+
+let makeThunk = function(fn) {
+    let args = Array.from(arguments).slice(1);
+    return function(cb) {
+        args.push(cb);
+        fn.apply(null, args);
+    }
+}
+
+let asyncThunk = makeThunk(sumAsync, 14, 23);
+asyncThunk((sum) => {
+    output(
+        sum
+    );
+})
