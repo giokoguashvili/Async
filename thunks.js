@@ -1,11 +1,11 @@
 function fakeAjax(url, callback) {
     var fake_responses = {
-        "file1" : "Text",
-        "file2" : "Some Text",
-        "file3" : "Welcome!"
+        "file1": "Text",
+        "file2": "Some Text",
+        "file3": "Welcome!"
     };
     var randomDealy = Math.floor(Math.random() * 10000 + 1);
-    setTimeout(function() {
+    setTimeout(function () {
         callback(fake_responses[url]);
         console.log("End Request: " + url);
     }, randomDealy);
@@ -16,7 +16,7 @@ function fakeAjax(url, callback) {
 function getFile(url) {
     var content, fn;
 
-    fakeAjax(url, function(response) {
+    fakeAjax(url, function (response) {
         if (fn) {
             fn(response);
         }
@@ -25,7 +25,7 @@ function getFile(url) {
         }
     });
 
-    return function(callback) {
+    return function (callback) {
         if (content) {
             return callback(content);
         }
@@ -46,15 +46,16 @@ var th2 = getFile("file2");
 var th3 = getFile("file3");
 
 function output(txt) {
-     console.log(new Date().toISOString() + ' : ' + txt);
+    console.log(new Date().toISOString() + ' : ' + txt);
 }
 
-th1(function(text1) {
+th1(function (text1) {
     output(text1);
-    th2(function(text2) {
+    th2(function (text2) {
         output(text2);
-        th3(function(text3) {
+        th3(function (text3) {
             output(text3);
         });
     });
 });
+

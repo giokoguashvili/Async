@@ -1,77 +1,46 @@
-class Promise {
+// Use promises
+let Promise = require('../libs/promise.js');
 
-    constructor(asyncFn) {
-        this._val = null;
-        this._cb = null;
+function output() { return Array.from(arguments).map(i => console.log(i)); }
 
-        let fillState = (function (val) {
-            this._val = val;
-            if (this._cb) this._cb(this._val);
-        }).bind(this);
+function fakeAjax(url, callback) {
+    var fake_responses = {
+        "file1": "Text",
+        "file2": "Some Text",
+        "file3": "Welcome!"
+    };
+    var randomDealy = Math.floor(Math.random() * 10000 + 1);
+    setTimeout(function () {
+        callback(fake_responses[url]);
+        //console.log("End Request: " + url);
+    }, randomDealy);
 
-        let res = (function (val) {
-            if (typeof val === 'object' && val.constructor.name === 'Promise') {
-                val.then(fillState);
-            } else {
-                fillState(val);
-            }
-        }).bind(this);
-
-        let rej = (function () { }).bind(this);
-        asyncFn(res, rej);
-    }
-
-    then(cb) {
-        let prevThis = this;
-        this._cb = function (val) {
-            this._nextP.res(cb(val));
-        }
-        let nextP = new Promise(function (res, rej) {
-            prevThis._nextP = { res, rej }
-        });
-        if (this._val) this._cb(this._val);
-        return nextP;
-    }
+    //console.log("Request: " + url);
 }
 
-let p2 = new Promise(function (res, rej) {
-    setTimeout(function () {
-        res("Welcome - P2");
-    }, 100);
-});
-
-let p3 = new Promise(function (res, rej) {
-    setTimeout(function () {
-        res("Welcome - P3");
-    }, 100);
-})
-
-let p1 = new Promise(function (res, rej) {
-    setTimeout(function () {
-        res("Welcome - P1");
-    }, 0);
-})
-    .then(function (val) {
-        let t = "(then 1 - " + val + ")";
-        console.log(t);
-        return t;
-    })
-    .then(function (val) {
-        let t = "(then 2 - " + val + ")";
-        console.log(t);
-        return t;
-    })
-    .then(function (val) {
-        return p2
-            .then(function (val1) {
-                return val1 + " " + val;
-            })
-            .then(function (v) {
-                return p3
-            });
-    })
-    .then(function (val) {
-        let t = "(then 1 - " + val + ")";
-        console.log(t);
-        return t;
+function getFileP(url) {
+    return new Promise(function (res, rej) {
+        fakeAjax(url, function (response) {
+            res(response);
+        });
     });
+}
+
+
+
+var p1 = getFileP("file1");
+var p2 = getFileP("file2");
+var p3 = getFileP("file3");
+
+p1
+.then(output)
+.then(function() {
+    return p2;
+})
+.then(output)
+.then(function(){
+    return p3;
+})
+.then(function() {
+    output("Complete!");
+});
