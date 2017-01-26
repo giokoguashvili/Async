@@ -1,76 +1,3 @@
-// class Promise {
-//     constructor(fn) {
-//         this._fn = fn;
-//         this._cb = null;
-//         this._val = null;
-
-//         this.res = this.res.bind(this);
-//         this._fn(this.res, this.rej);
-//     }
-
-//     res(val) {
-//         if (this._cb) {
-//             this._cb(val);
-//         } else {
-//             this._val = val;
-//         }
-//     }
-
-//     rej() {
-
-//     }
-
-//     then(cb) {
-//         let cbRes = null;
-
-//         if (this._val !== null) {
-//             cbRes = cb(val);
-
-
-//         } else {
-
-//             let nextFn = function(prevProm) {
-//                 if (this._cb) {
-//                     this._cb = function() {
-
-//                     }
-//                     prevProm.then(function() {
-
-//                     })
-//                 }
-//             }
-
-//             let pFun = (function (res, rej) {
-//                 this._cb = function (val) {
-//                     let cbRes1 = cb(val);
-//                     if (cbRes1.constructor !== 'Promise') {
-//                         res(cbRes1);
-//                     } else {
-//                         nextFn(cbRes1);
-//                     }
-
-//                 }
-//             }).bind(this);
-//             return new Promise(pFun);
-//         }
-//     }
-// }
-
-// let p1 = new Promise(function (res, rej) {
-//     setTimeout(function () {
-//         res("Welcome!");
-//     }, 1000);
-// })
-// .then(function (val) {
-//     console.log(val);
-//     return "next val";
-// })
-// .then(function (val) {
-//     console.log(val);
-// });
-
-////////////////////////////////
-
 class Promise {
 
     constructor(asyncFn) {
@@ -79,10 +6,11 @@ class Promise {
 
         let fillState = (function (val) {
             this._val = val;
-            if (this._cb) this._nextP.res(this._cb(this._val));
+            if (this._cb) this._cb(this._val);
         }).bind(this);
 
         let res = (function (val) {
+            let prevThis = this;
             if (typeof val === 'object') {
                 val.then(fillState);
             } else {
@@ -91,83 +19,60 @@ class Promise {
         }).bind(this);
 
         let rej = (function () { }).bind(this);
-
         asyncFn(res, rej);
-    }
-
-    _wrapCb(cb) {
-        return cb();
     }
 
     then(cb) {
         let prevThis = this;
-        this._cb = cb;
-
-        return new Promise(function (res, rej) {
+        this._cb = function (val) {
+            this._nextP.res(cb(val));
+        }
+        let nextP = new Promise(function (res, rej) {
             prevThis._nextP = { res, rej }
-            if (prevThis._val) {
-                res(prevThis._cb(prevThis._val));
-            }
-
         });
+        if (this._val) this._cb(this._val);
+        return nextP;
     }
 }
 
 let p2 = new Promise(function (res, rej) {
     setTimeout(function () {
-        res("Welcome! - P2");
-    }, 1000);
+        res("Welcome - P2");
+    }, 100);
+});
+
+let p3 = new Promise(function (res, rej) {
+    setTimeout(function () {
+        res("Welcome - P3");
+    }, 100);
 })
 
 let p1 = new Promise(function (res, rej) {
     setTimeout(function () {
-        res("Welcome!");
-    }, 1000);
+        res("Welcome - P1");
+    }, 0);
 })
     .then(function (val) {
-        console.log(val);
-        return "next val";
+        let t = "(then 1 - " + val + ")";
+        console.log(t);
+        return t;
     })
     .then(function (val) {
-        console.log(val);
-
-        return p2.then(function (val) {
-            //console.log(val);
-            return val + 'kogoia';
-        })
-            .then(function (val) {
-                console.log(val);
-                console.log('1');
+        let t = "(then 2 - " + val + ")";
+        console.log(t);
+        return t;
+    })
+    .then(function (val) {
+        return p2
+            .then(function (val1) {
+                return val1 + " " + val;
+            })
+            .then(function (v) {
+                return p3
             });
     })
     .then(function (val) {
-        console.log(val);
-        console.log('2');
-        return 2;
+        let t = "(then 1 - " + val + ")";
+        console.log(t);
+        return t;
     });
-
-
-// new Promise(function (res, rej) {
-//     res(100)
-// })
-// .then(function (val) { // 100
-//     return val * 2;
-// })
-// .then(function (val) {
-//     return new Promise(function (res, rej) {
-//         res(val);
-//     })
-//     .then(function (val) {
-//         return val * 3;
-//     })
-//     .then(function(val) {
-//         _nextP.res(val);
-//     });
-// })
-
-// new Promise(function (res, rej) {
-//     prevThis._nextP = { res, rej }
-// })
-// .then(function (val) {
-//     console.log(val);
-// })
