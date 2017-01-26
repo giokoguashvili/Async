@@ -21,3 +21,8 @@ async(function* () {
         "Complete!"
     )
 });
+
+// file1: Text
+// file2: Some Text
+// file3: Welcome!
+// Complete!
