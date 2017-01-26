@@ -10,9 +10,13 @@ function getFileP2(url) {
     });
 }
 
-List.of("file1", "file2", "file3")
-    .foldMap(getFileP2, Promise.resolve())
-    .then(function(){
+Promise.all(
+    List.of("file1", "file2", "file3").map(getFileP2)
+)
+.then(function(results) {
+    results.map((item) => output(item));
+})
+.then(function(){
         output(
             "Complete!"
         )

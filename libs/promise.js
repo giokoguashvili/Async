@@ -41,6 +41,26 @@ class Promise {
     static resolve() {
          return new Promise(function(res, rej){ res("resolved"); });
     }
+
+    static all(promises) {
+        let nextPromise = {};
+        let results = [];
+        promises
+            .reduce(function(chain, pr) {
+                return chain
+                    .concat(pr)
+                    .then(function(val) {
+                        results.push(val);
+                    })
+            }, Promise.resolve())
+            .then(function() {
+                nextPromise.res(results);
+            });
+
+        return new Promise(function(res) {
+            nextPromise = { res };
+        });
+    }
 }
 
 module.exports = Promise;
