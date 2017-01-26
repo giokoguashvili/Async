@@ -1,4 +1,3 @@
-let { List } = require("immutable-ext");
 let { fakeAjax, output } = require("../common.js");
 let { Promise, async } = require('../../libs');
 
