@@ -34,31 +34,29 @@ class Promise {
     }
 
     concat(promise) {
-        return this.then(function() {
+        return this.then(function () {
             return promise;
         });
-    } 
+    }
     static resolve() {
-         return new Promise(function(res, rej){ res("resolved"); });
+        return new Promise(function (res, rej) { res("resolved"); });
     }
 
     static all(promises) {
-        let nextPromise = {};
-        let results = [];
-        promises
-            .reduce(function(chain, pr) {
-                return chain
-                    .concat(pr)
-                    .then(function(val) {
-                        results.push(val);
-                    })
-            }, Promise.resolve())
-            .then(function() {
-                nextPromise.res(results);
-            });
-
-        return new Promise(function(res) {
-            nextPromise = { res };
+        return new Promise(function (res) {
+            let nextPromise = {};
+            let results = [];
+            promises
+                .reduce(function (chain, pr) {
+                    return chain
+                        .concat(pr)
+                        .then(function (val) {
+                            results.push(val);
+                        })
+                }, Promise.resolve())
+                .then(function () {
+                    res(results);
+                });
         });
     }
 }
