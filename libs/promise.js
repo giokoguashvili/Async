@@ -44,7 +44,6 @@ class Promise {
 
     static all(promises) {
         return new Promise(function (res) {
-            let nextPromise = {};
             let results = [];
             promises
                 .reduce(function (chain, pr) {
