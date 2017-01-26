@@ -10,7 +10,6 @@ class Promise {
         }).bind(this);
 
         let res = (function (val) {
-            let prevThis = this;
             if (typeof val === 'object') {
                 val.then(fillState);
             } else {
