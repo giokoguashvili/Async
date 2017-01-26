@@ -1,4 +1,6 @@
 // Use promises
+let { List } = require("immutable-ext");
+
 let Promise = require('../libs/promise.js');
 
 function output() { return Array.from(arguments).map(i => console.log(i)); }
@@ -24,6 +26,14 @@ function getFileP(url) {
             res(response);
         });
     });
+}
+
+function getFileP2(url) {
+    return new Promise(function (res, rej) {
+        fakeAjax(url, function (response) {
+            res(response);
+        });
+    }).then(output);
 }
 
 ////////////// example 1 
@@ -56,3 +66,6 @@ p1
     }, Promise.resolve());
 
 // Example - 3
+
+List.of("file1", "file2", "file3")
+    .foldMap(getFileP2, Promise.resolve());
