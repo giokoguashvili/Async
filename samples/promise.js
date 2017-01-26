@@ -10,7 +10,7 @@ class Promise {
         }).bind(this);
 
         let res = (function (val) {
-            if (typeof val === 'object') {
+            if (typeof val === 'object' && val.constructor.name === 'Promise') {
                 val.then(fillState);
             } else {
                 fillState(val);
