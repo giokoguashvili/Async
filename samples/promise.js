@@ -26,7 +26,7 @@ function getFileP(url) {
     });
 }
 
-
+////////////// example 1 
 
 var p1 = getFileP("file1");
 var p2 = getFileP("file2");
@@ -41,6 +41,18 @@ p1
 .then(function(){
     return p3;
 })
+.then(output)
 .then(function() {
     output("Complete!");
 });
+
+/// Example - 2
+
+["file1", "file2", "file3"]
+    .map(getFileP)
+    .reduce(function (chain, promise) {
+        return chain.concat(promise)
+            .then(output);
+    }, Promise.resolve());
+
+// Example - 3

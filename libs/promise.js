@@ -32,6 +32,15 @@ class Promise {
         if (this._val) this._cb(this._val);
         return nextP;
     }
+
+    concat(promise) {
+        return this.then(function() {
+            return promise;
+        });
+    } 
+    static resolve() {
+         return new Promise(function(res, rej){ res(""); });
+    }
 }
 
 module.exports = Promise;
