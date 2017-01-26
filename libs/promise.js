@@ -39,7 +39,7 @@ class Promise {
         });
     } 
     static resolve() {
-         return new Promise(function(res, rej){ res(""); });
+         return new Promise(function(res, rej){ res("resolved"); });
     }
 }
 

@@ -68,4 +68,9 @@ p1
 // Example - 3
 
 List.of("file1", "file2", "file3")
-    .foldMap(getFileP2, Promise.resolve());
+    .foldMap(getFileP2, Promise.resolve())
+    .then(function(){
+        output(
+            "Complete!"
+        )
+    });
