@@ -5,16 +5,16 @@ function sum(a, b) {
 }
 
 function sumAsync(a, b, cb) {
-    setTimeout(function() {
+    setTimeout(function () {
         cb(a + b);
     }, 1000);
 }
 
-let thunk = function() {
+let thunk = function () {
     return sum(10, 7);
 }
 
-let thunkAsync = function(cb) {
+let thunkAsync = function (cb) {
     return sumAsync(20, 7, cb);
 }
 
@@ -23,14 +23,14 @@ output(
 );
 
 thunkAsync((sum) => {
-    output(sum);  
+    output(sum);
 });
 
 //////////////////////////////
 
-let makeThunk = function(fn) {
+let makeThunk = function (fn) {
     let args = Array.from(arguments).slice(1);
-    return function(cb) {
+    return function (cb) {
         args.push(cb);
         fn.apply(null, args);
     }

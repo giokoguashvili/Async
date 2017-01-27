@@ -1,6 +1,5 @@
 class Promise {
-
-    constructor(asyncFn) {
+    constructor(fn) {
         this._val = null;
         this._cb = null;
 
@@ -18,19 +17,19 @@ class Promise {
         }).bind(this);
 
         let rej = (function () { }).bind(this);
-        asyncFn(res, rej);
+        fn(res, rej);
     }
 
     then(cb) {
         let prevThis = this;
         this._cb = function (val) {
-            this._nextP.res(cb(val));
+            this._nextPr.res(cb(val));
         }
-        let nextP = new Promise(function (res, rej) {
-            prevThis._nextP = { res, rej }
+        let nextPr = new Promise(function (res, rej) {
+            prevThis._nextPr = { res, rej }
         });
         if (this._val) this._cb(this._val);
-        return nextP;
+        return nextPr;
     }
 
     concat(promise) {
@@ -38,6 +37,7 @@ class Promise {
             return promise;
         });
     }
+    
     static resolve() {
         return new Promise(function (res, rej) { res("resolved"); });
     }
